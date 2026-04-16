@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import User from '@/models/User';
 import bcrypt from 'bcryptjs';
-import { SignJWT } from 'jose';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey_12345';
-const encodedSecret = new TextEncoder().encode(JWT_SECRET);
+import { getAuthCookieOptions, isConfigError, signAuthToken } from '@/lib/auth';
+import { getUserByUsername } from '@/lib/users';
 
 export async function POST(req) {
   try {
@@ -15,9 +11,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Please provide username and password' }, { status: 400 });
     }
 
-    await dbConnect();
-
-    const user = await User.findOne({ username });
+    const user = await getUserByUsername(username);
     if (!user) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
@@ -27,27 +21,23 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // Sign JWT
-    const token = await new SignJWT({ id: user._id, username: user.username })
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
-      .setExpirationTime('1d') // Valid for 1 day
-      .sign(encodedSecret);
+    const token = await signAuthToken({
+      id: user._id.toString(),
+      username: user.username,
+    });
 
     const response = NextResponse.json({ message: 'Login successful' }, { status: 200 });
-    
-    // Set cookie
     response.cookies.set({
-      name: 'auth_token',
+      ...getAuthCookieOptions(),
       value: token,
-      httpOnly: true,
-      path: '/',
-      maxAge: 60 * 60 * 24, // 1 day
-      sameSite: 'lax',
     });
 
     return response;
   } catch (error) {
+    if (isConfigError(error)) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

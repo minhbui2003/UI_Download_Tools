@@ -5,6 +5,13 @@
   min-height: 100vh;
   padding: 4rem 2rem 15px 2rem;
   position: relative;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(234, 178, 141, 0.8), transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(116, 156, 196, 0.8), transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(226, 214, 195, 0.9), transparent 50%),
+    radial-gradient(circle at 10% 10%, rgba(221, 187, 96, 0.7), transparent 50%),
+    linear-gradient(135deg, #f7d2b5, #c1d5e6);
+  background-attachment: fixed;
 }
 
 .loginIcon {
@@ -15,7 +22,7 @@
   transition: all 0.2s ease;
   background: rgba(255, 255, 255, 0.5);
   padding: 8px;
-  border-radius: 50%;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +57,7 @@
   font-size: 1.4rem;
   font-weight: 800;
   color: #1e293b;
-  letter-spacing: -0.5px;
+  letter-spacing: 0;
 }
 
 .header {
@@ -64,7 +71,7 @@
   font-weight: 700;
   margin-bottom: 1rem;
   color: #1e293b;
-  letter-spacing: -0.5px;
+  letter-spacing: 0;
 }
 
 .highlight {
@@ -77,19 +84,21 @@
 }
 
 .subtitle {
-  color: #64748b;
-  font-size: 15px;
-  max-width: 600px;
+  color: #334155;
+  font-size: 16px;
+  font-weight: 500;
+  max-width: 620px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 300px));
   gap: 2rem;
+  justify-content: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1296px;
   margin-bottom: 4rem;
 }
 
@@ -97,12 +106,13 @@
   background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-radius: 20px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
+  min-height: 252px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
@@ -117,13 +127,18 @@
   align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
+  min-width: 0;
+}
+
+.cardHeading {
+  min-width: 0;
 }
 
 .iconWrapper {
   background: rgba(255, 255, 255, 0.8);
   color: var(--accent-blue);
   padding: 12px;
-  border-radius: 14px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -136,6 +151,7 @@
   font-weight: 700;
   margin-bottom: 4px;
   color: var(--text-primary);
+  overflow-wrap: anywhere;
 }
 
 .cardVersion {
@@ -143,22 +159,45 @@
   color: #ea580c;
   background: rgba(234, 88, 12, 0.1);
   padding: 2px 8px;
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 600;
 }
 
 .cardDesc {
   color: var(--text-secondary);
+  display: -webkit-box;
   font-size: 0.95rem;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   line-height: 1.5;
-  flex-grow: 1;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.7rem;
+  min-height: 4.3em;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.detailButton {
+  align-self: flex-start;
+  background: transparent;
+  border: 0;
+  color: var(--accent-blue);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0 0 1.1rem;
+  padding: 0;
+}
+
+.detailButton:hover {
+  color: #ea580c;
+  text-decoration: underline;
 }
 
 .cardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: auto;
 }
 
 .cardSize {
@@ -170,7 +209,7 @@
 .downloadBtn {
   background: linear-gradient(135deg, #2563eb, #f97316);
   color: white;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 10px 16px;
   font-weight: 600;
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
@@ -185,6 +224,79 @@
 
 .downloadBtn:hover {
   transform: scale(1.05);
+}
+
+.modalBackdrop {
+  align-items: center;
+  background: rgba(15, 23, 42, 0.42);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 1rem;
+  position: fixed;
+  z-index: 100;
+}
+
+.modal {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.22);
+  max-height: min(78vh, 680px);
+  max-width: 620px;
+  overflow: auto;
+  padding: 1.5rem;
+  position: relative;
+  width: 100%;
+}
+
+.modalClose {
+  align-items: center;
+  background: rgba(30, 41, 59, 0.08);
+  border: 1px solid rgba(30, 41, 59, 0.12);
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  height: 34px;
+  justify-content: center;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 34px;
+}
+
+.modalHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-right: 3rem;
+}
+
+.modalTitle {
+  color: var(--text-primary);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin-bottom: 0.35rem;
+  overflow-wrap: anywhere;
+}
+
+.modalDesc {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.modalFooter {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .card:hover .iconWrapper {
@@ -206,6 +318,52 @@
   font-size: 1.2rem;
   margin: 4rem 0;
   font-weight: 500;
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .main {
+    padding: 5.5rem 1rem 15px;
+  }
+
+  .topBarLogo {
+    left: 1rem;
+    top: 1.25rem;
+  }
+
+  .loginIcon {
+    right: 1rem;
+    top: 1.25rem;
+  }
+
+  .companyName {
+    font-size: 1.05rem;
+  }
+
+  .header {
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .title {
+    font-size: 2.35rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 420px;
+  }
+
+  .cardFooter {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 /* Animations */

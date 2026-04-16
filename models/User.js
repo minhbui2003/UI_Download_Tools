@@ -1,18 +1,1 @@
-import mongoose from 'mongoose';
-
-const UserSchema = new mongoose.Schema(
-  {
-    username: {
-      type: String,
-      required: [true, 'Please provide a username'],
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: [true, 'Please provide a password'],
-    },
-  },
-  { timestamps: true }
-);
-
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+throw new Error('MongoDB models have been replaced by PostgreSQL repositories in lib/users.js.');

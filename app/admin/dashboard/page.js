@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import * as Icons from 'lucide-react';
+import styles from './page.module.css';
 
 export default function AdminDashboard() {
   const [tools, setTools] = useState([]);
@@ -104,110 +104,90 @@ export default function AdminDashboard() {
   const iconOptions = ['Wrench', 'Image', 'Palette', 'UploadCloud', 'DownloadCloud', 'Search', 'Scissors', 'FileText', 'Settings', 'Database', 'Layout'];
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h2 style={{ color: 'var(--accent-blue)' }}>Quản lý Tools</h2>
-        <button onClick={handleLogout} style={{ 
-          background: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', 
-          padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' 
-        }}>Đăng xuất</button>
+    <div className={styles.dashboard}>
+      <div className={styles.topBar}>
+        <h2 className={styles.title}>Quản lý Tools</h2>
+        <button onClick={handleLogout} className={styles.logoutButton}>Đăng xuất</button>
       </div>
 
-      <div style={{
-        background: 'var(--secondary-bg)', padding: '2rem', borderRadius: '12px',
-        border: '1px solid var(--border-color)', marginBottom: '3rem'
-      }}>
-        <h3 style={{ marginBottom: '1.5rem', color: 'var(--accent-orange)' }}>
+      <section className={styles.panel}>
+        <h3 className={styles.panelTitle}>
           {editingId ? 'Sửa thông tin Tool' : 'Thêm Tool mới'}
         </h3>
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          <div>
-            <label style={labelStyle}>Tên công cụ</label>
-            <input required style={inputStyle} value={title} onChange={e => setTitle(e.target.value)} />
+        <form onSubmit={handleSubmit} className={styles.formGrid}>
+          <div className={styles.field}>
+            <label className={styles.label}>Tên công cụ</label>
+            <input required className={styles.input} value={title} onChange={e => setTitle(e.target.value)} />
           </div>
-          <div>
-            <label style={labelStyle}>Link tải xuống (URL)</label>
-            <input required type="url" style={inputStyle} value={link} onChange={e => setLink(e.target.value)} />
+          <div className={styles.field}>
+            <label className={styles.label}>Link tải xuống (URL)</label>
+            <input required type="url" className={styles.input} value={link} onChange={e => setLink(e.target.value)} />
           </div>
-          <div>
-            <label style={labelStyle}>Phiên bản (VD: v1.0.0)</label>
-            <input style={inputStyle} value={version} onChange={e => setVersion(e.target.value)} />
+          <div className={styles.field}>
+            <label className={styles.label}>Phiên bản (VD: v1.0.0)</label>
+            <input className={styles.input} value={version} onChange={e => setVersion(e.target.value)} />
           </div>
-          <div>
-            <label style={labelStyle}>Dung lượng (VD: 15.2 MB)</label>
-            <input style={inputStyle} value={size} onChange={e => setSize(e.target.value)} />
+          <div className={styles.field}>
+            <label className={styles.label}>Dung lượng (VD: 15.2 MB)</label>
+            <input className={styles.input} value={size} onChange={e => setSize(e.target.value)} />
           </div>
-          <div>
-            <label style={labelStyle}>Icon Template (Lucide React)</label>
-            <select style={inputStyle} value={iconName} onChange={e => setIconName(e.target.value)}>
+          <div className={styles.field}>
+            <label className={styles.label}>Icon Template (Lucide React)</label>
+            <select className={styles.input} value={iconName} onChange={e => setIconName(e.target.value)}>
               {iconOptions.map(ico => <option key={ico} value={ico}>{ico}</option>)}
             </select>
           </div>
-          <div style={{ gridColumn: 'span 2' }}>
-            <label style={labelStyle}>Mô tả</label>
-            <textarea required style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }} value={description} onChange={e => setDescription(e.target.value)}></textarea>
+          <div className={styles.fullWidth}>
+            <label className={styles.label}>Mô tả</label>
+            <textarea required className={`${styles.input} ${styles.textarea}`} value={description} onChange={e => setDescription(e.target.value)}></textarea>
           </div>
-          <div style={{ gridColumn: 'span 2', display: 'flex', gap: '1rem' }}>
-            <button type="submit" disabled={formLoading} style={{
-              background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-orange))',
-              color: 'white', border: 'none', padding: '10px 24px', borderRadius: '6px',
-              cursor: 'pointer', fontWeight: 'bold'
-            }}>
+          <div className={styles.formActions}>
+            <button type="submit" disabled={formLoading} className={styles.primaryButton}>
               {formLoading ? 'Đang lưu...' : (editingId ? 'Cập nhật' : 'Thêm mới')}
             </button>
             {editingId && (
-              <button type="button" onClick={resetForm} style={{
-                background: 'transparent', color: 'white', border: '1px solid var(--border-color)',
-                padding: '10px 24px', borderRadius: '6px', cursor: 'pointer'
-              }}>Huỷ</button>
+              <button type="button" onClick={resetForm} className={styles.secondaryButton}>Huỷ</button>
             )}
           </div>
         </form>
-      </div>
+      </section>
 
-      <div style={{ background: 'var(--secondary-bg)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-        <h3 style={{ marginBottom: '1.5rem' }}>Danh sách hiện tại</h3>
+      <section className={styles.panel}>
+        <h3 className={styles.listTitle}>Danh sách hiện tại</h3>
         {loading ? (
-          <div>Đang tải...</div>
+          <div className={styles.muted}>Đang tải...</div>
         ) : tools.length === 0 ? (
-          <div style={{ color: 'var(--text-secondary)' }}>Chưa có data.</div>
+          <div className={styles.muted}>Chưa có data.</div>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border-color)' }}>
-                <th style={{ padding: '12px' }}>Tên</th>
-                <th style={{ padding: '12px' }}>Icon</th>
-                <th style={{ padding: '12px' }}>Version</th>
-                <th style={{ padding: '12px' }}>Link</th>
-                <th style={{ padding: '12px', textAlign: 'right' }}>Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tools.map(tool => (
-                <tr key={tool._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '12px', fontWeight: 'bold', color: 'var(--accent-blue)' }}>{tool.title}</td>
-                  <td style={{ padding: '12px', color: 'var(--text-secondary)' }}>{tool.iconName}</td>
-                  <td style={{ padding: '12px' }}>{tool.version}</td>
-                  <td style={{ padding: '12px', color: 'var(--text-secondary)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {tool.link}
-                  </td>
-                  <td style={{ padding: '12px', textAlign: 'right' }}>
-                    <button onClick={() => handleEdit(tool)} style={{ background: '#ffa502', color: '#000', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', marginRight: '8px' }}>Sửa</button>
-                    <button onClick={() => handleDelete(tool._id)} style={{ background: '#ff4757', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer' }}>Xoá</button>
-                  </td>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Tên</th>
+                  <th>Icon</th>
+                  <th>Version</th>
+                  <th>Link</th>
+                  <th className={styles.actionsHeader}>Hành động</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tools.map(tool => (
+                  <tr key={tool._id}>
+                    <td className={styles.toolName}>{tool.title}</td>
+                    <td className={styles.mutedCell}>{tool.iconName}</td>
+                    <td>{tool.version}</td>
+                    <td className={styles.linkCell}>{tool.link}</td>
+                    <td className={styles.rowActions}>
+                      <button onClick={() => handleEdit(tool)} className={styles.editButton}>Sửa</button>
+                      <button onClick={() => handleDelete(tool._id)} className={styles.deleteButton}>Xoá</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }
-
-const labelStyle = { display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' };
-const inputStyle = {
-  width: '100%', padding: '10px', borderRadius: '6px',
-  border: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.3)',
-  color: 'white', outline: 'none'
-};

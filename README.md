@@ -15,7 +15,7 @@
 ## 💻 Công nghệ sử dụng
 
 - **Frontend/Backend**: [Next.js 14](https://nextjs.org/) (App Router)
-- **Cơ sở dữ liệu**: [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) thông qua [Mongoose](https://mongoosejs.com/)
+- **Cơ sở dữ liệu**: PostgreSQL thông qua [node-postgres](https://node-postgres.com/)
 - **Xác thực**: JWT & Bcryptjs
 - **Icons**: Lucide React
 - **Styling**: Vanilla CSS (CSS Modules)
@@ -43,9 +43,49 @@ yarn install
 Tạo file `.env.local` ở thư mục gốc và cấu hình các biến sau:
 
 ```env
-MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key_for_jwt
+SETUP_TOKEN=your_one_time_setup_token
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_initial_admin_password
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+POSTGRES_HOST=your_postgres_host
+POSTGRES_PORT=5432
+POSTGRES_USER=your_postgres_user
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_DATABASE=your_postgres_database
+POSTGRES_SSL=false
 ```
+
+> Không commit file `.env.local`. Các giá trị trên chỉ là ví dụ, hãy dùng secret mạnh khi deploy.
+
+### Deploy lên Vercel
+Khi deploy, cấu hình các biến môi trường trong **Vercel Project Settings → Environment Variables**:
+
+```env
+JWT_SECRET=your_secret_key_for_jwt
+SETUP_TOKEN=your_one_time_setup_token
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_initial_admin_password
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+POSTGRES_HOST=your_postgres_host
+POSTGRES_PORT=5432
+POSTGRES_USER=your_postgres_user
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_DATABASE=your_postgres_database
+POSTGRES_SSL=false
+```
+
+Nếu PostgreSQL chỉ cho phép IP cố định, cần mở quyền kết nối cho hạ tầng deploy hoặc dùng database/proxy hỗ trợ serverless. File `vercel.json` đang đặt region `sin1` để ưu tiên máy chủ gần Việt Nam/Singapore.
+
+### 4. Tạo tài khoản Admin lần đầu
+Sau khi cấu hình env và chạy server, gọi endpoint setup bằng Bearer token:
+
+```bash
+curl -X POST http://localhost:3000/api/setup \
+  -H "Authorization: Bearer your_one_time_setup_token"
+```
+
+Endpoint `/api/setup` chỉ tạo admin khi database chưa có user nào. Nếu đã có admin, API sẽ trả về trạng thái setup đã hoàn tất.
 
 ---
 
@@ -70,8 +110,7 @@ npm start
 - `/app`: Chứa các route, layouts và components chính (App Router).
 - `/app/admin`: Các module dành riêng cho quản trị viên (Login, Dashboard).
 - `/api`: Các API endpoint để giao tiếp với cơ sở dữ liệu.
-- `/models`: Định nghĩa các schemas cho MongoDB (Mongoose Models).
-- `/lib`: Chứa các cấu hình thư viện và tiện ích (Database connection, JWT helpers).
+- `/lib`: Chứa cấu hình PostgreSQL, repositories và JWT helpers.
 - `/public`: Chứa các tệp tĩnh như hình ảnh, logos.
 
 ---

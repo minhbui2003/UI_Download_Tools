@@ -1,32 +1,34 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Tool from '@/models/Tool';
-import { jwtVerify } from 'jose';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey_12345';
-const encodedSecret = new TextEncoder().encode(JWT_SECRET);
+import { AUTH_COOKIE_NAME, isConfigError, verifyAuthToken } from '@/lib/auth';
+import { deleteTool, updateTool } from '@/lib/tools';
 
 async function checkAuth(req) {
-  const token = req.cookies.get('auth_token')?.value;
-  if (!token) return false;
   try {
-    await jwtVerify(token, encodedSecret);
-    return true;
-  } catch (err) {
-    return false;
+    const token = req.cookies.get(AUTH_COOKIE_NAME)?.value;
+    await verifyAuthToken(token);
+    return { authenticated: true };
+  } catch (error) {
+    if (isConfigError(error)) {
+      return { authenticated: false, error, status: 500 };
+    }
+
+    return { authenticated: false, status: 401 };
   }
 }
 
 export async function PUT(req, { params }) {
-  if (!(await checkAuth(req))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const auth = await checkAuth(req);
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { error: auth.error?.message || 'Unauthorized' },
+      { status: auth.status }
+    );
   }
 
   try {
-    await dbConnect();
     const data = await req.json();
     const { id } = params;
-    const updatedTool = await Tool.findByIdAndUpdate(id, data, { new: true });
+    const updatedTool = await updateTool(id, data);
     
     if (!updatedTool) {
       return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
@@ -38,14 +40,17 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  if (!(await checkAuth(req))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const auth = await checkAuth(req);
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { error: auth.error?.message || 'Unauthorized' },
+      { status: auth.status }
+    );
   }
 
   try {
-    await dbConnect();
     const { id } = params;
-    const deletedTool = await Tool.findByIdAndDelete(id);
+    const deletedTool = await deleteTool(id);
     if (!deletedTool) {
       return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
     }

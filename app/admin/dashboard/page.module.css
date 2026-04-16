@@ -1,0 +1,224 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.topBar {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  color: var(--accent-blue);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.logoutButton,
+.secondaryButton {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 600;
+  padding: 8px 14px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.logoutButton:hover,
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(30, 41, 59, 0.35);
+}
+
+.panel {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.panelTitle {
+  color: var(--accent-orange);
+  margin-bottom: 1.5rem;
+}
+
+.listTitle {
+  margin-bottom: 1.5rem;
+}
+
+.formGrid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field,
+.fullWidth {
+  min-width: 0;
+}
+
+.fullWidth,
+.formActions {
+  grid-column: 1 / -1;
+}
+
+.label {
+  color: var(--text-secondary);
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.input {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  outline: none;
+  padding: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
+}
+
+.textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 10px 24px;
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.secondaryButton {
+  color: var(--text-primary);
+}
+
+.muted,
+.mutedCell,
+.linkCell {
+  color: var(--text-secondary);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table {
+  border-collapse: collapse;
+  min-width: 760px;
+  width: 100%;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table th {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.toolName {
+  color: var(--accent-blue);
+  font-weight: 700;
+}
+
+.linkCell {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionsHeader,
+.rowActions {
+  text-align: right;
+}
+
+.rowActions {
+  white-space: nowrap;
+}
+
+.editButton,
+.deleteButton {
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 6px 10px;
+}
+
+.editButton {
+  background: #ffa502;
+  color: #000;
+  margin-right: 8px;
+}
+
+.deleteButton {
+  background: #ff4757;
+  color: #fff;
+}
+
+@media (max-width: 720px) {
+  .dashboard {
+    gap: 1.5rem;
+  }
+
+  .topBar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .logoutButton {
+    width: 100%;
+  }
+
+  .panel {
+    padding: 1.25rem;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}

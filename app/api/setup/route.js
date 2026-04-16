@@ -1,24 +1,47 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import User from '@/models/User';
 import bcrypt from 'bcryptjs';
+import { createUser, getUserCount } from '@/lib/users';
 
-export async function GET() {
+function getBearerToken(req) {
+  const authHeader = req.headers.get('authorization') || '';
+  const [scheme, token] = authHeader.split(' ');
+
+  if (scheme !== 'Bearer' || !token) {
+    return null;
+  }
+
+  return token;
+}
+
+function getSetupConfig() {
+  const { SETUP_TOKEN, ADMIN_USERNAME, ADMIN_PASSWORD } = process.env;
+
+  if (!SETUP_TOKEN || !ADMIN_USERNAME || !ADMIN_PASSWORD) {
+    throw new Error('SETUP_TOKEN, ADMIN_USERNAME, and ADMIN_PASSWORD must be configured');
+  }
+
+  return { SETUP_TOKEN, ADMIN_USERNAME, ADMIN_PASSWORD };
+}
+
+export async function POST(req) {
   try {
-    await dbConnect();
-    
-    // Check if any user exists
-    const userCount = await User.countDocuments();
-    if (userCount > 0) {
-      return NextResponse.json({ message: 'Setup already completed. Admin user exists.' }, { status: 400 });
+    const config = getSetupConfig();
+    const token = getBearerToken(req);
+
+    if (token !== config.SETUP_TOKEN) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Create default admin
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash('123456', salt);
+    const userCount = await getUserCount();
+    if (userCount > 0) {
+      return NextResponse.json({ message: 'Setup already completed. Admin user exists.' }, { status: 409 });
+    }
 
-    const newAdmin = await User.create({
-      username: 'admin',
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(config.ADMIN_PASSWORD, salt);
+
+    const newAdmin = await createUser({
+      username: config.ADMIN_USERNAME,
       password: hashedPassword,
     });
 
