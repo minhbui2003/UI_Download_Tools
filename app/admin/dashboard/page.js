@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [description, setDescription] = useState('');
   const [size, setSize] = useState('');
   const [link, setLink] = useState('');
+  const [macLink, setMacLink] = useState('');
   const [iconName, setIconName] = useState('Wrench');
   const [formLoading, setFormLoading] = useState(false);
 
@@ -49,6 +50,7 @@ export default function AdminDashboard() {
     setDescription('');
     setSize('');
     setLink('');
+    setMacLink('');
     setIconName('Wrench');
   };
 
@@ -59,6 +61,7 @@ export default function AdminDashboard() {
     setDescription(tool.description);
     setSize(tool.size);
     setLink(tool.link);
+    setMacLink(tool.macLink || '');
     setIconName(tool.iconName || 'Wrench');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -77,7 +80,7 @@ export default function AdminDashboard() {
     e.preventDefault();
     setFormLoading(true);
     
-    const payload = { title, version, description, size, link, iconName };
+    const payload = { title, version, description, size, link, macLink, iconName };
     const url = editingId ? `/api/tools/${editingId}` : '/api/tools';
     const method = editingId ? 'PUT' : 'POST';
 
@@ -120,12 +123,16 @@ export default function AdminDashboard() {
             <input required className={styles.input} value={title} onChange={e => setTitle(e.target.value)} />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>Link tải xuống (URL)</label>
+            <label className={styles.label}>Phiên bản (VD: v1.0.0)</label>
+            <input className={styles.input} value={version} onChange={e => setVersion(e.target.value)} />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.label}>Link tải Windows (URL)</label>
             <input required type="url" className={styles.input} value={link} onChange={e => setLink(e.target.value)} />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>Phiên bản (VD: v1.0.0)</label>
-            <input className={styles.input} value={version} onChange={e => setVersion(e.target.value)} />
+            <label className={styles.label}>Link tải macOS (URL)</label>
+            <input type="url" className={styles.input} value={macLink} onChange={e => setMacLink(e.target.value)} placeholder="Có thể để trống nếu chưa có bản macOS" />
           </div>
           <div className={styles.field}>
             <label className={styles.label}>Dung lượng (VD: 15.2 MB)</label>
@@ -166,7 +173,8 @@ export default function AdminDashboard() {
                   <th>Tên</th>
                   <th>Icon</th>
                   <th>Version</th>
-                  <th>Link</th>
+                  <th>Windows</th>
+                  <th>macOS</th>
                   <th className={styles.actionsHeader}>Hành động</th>
                 </tr>
               </thead>
@@ -177,6 +185,7 @@ export default function AdminDashboard() {
                     <td className={styles.mutedCell}>{tool.iconName}</td>
                     <td>{tool.version}</td>
                     <td className={styles.linkCell}>{tool.link}</td>
+                    <td className={styles.linkCell}>{tool.macLink || 'Chưa có'}</td>
                     <td className={styles.rowActions}>
                       <button onClick={() => handleEdit(tool)} className={styles.editButton}>Sửa</button>
                       <button onClick={() => handleDelete(tool._id)} className={styles.deleteButton}>Xoá</button>

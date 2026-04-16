@@ -208,9 +208,11 @@
 
 .downloadBtn {
   background: linear-gradient(135deg, #2563eb, #f97316);
+  border: none;
   color: white;
   border-radius: 8px;
   padding: 10px 16px;
+  font: inherit;
   font-weight: 600;
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
   display: flex;
@@ -218,12 +220,55 @@
   gap: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: none;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .downloadBtn:hover {
   transform: scale(1.05);
+}
+
+.downloadMenu {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(30, 41, 59, 0.12);
+  border-radius: 8px;
+  bottom: 4.4rem;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+  display: grid;
+  gap: 0.35rem;
+  min-width: 180px;
+  padding: 0.5rem;
+  position: absolute;
+  right: 1.5rem;
+  z-index: 10;
+}
+
+.downloadMenuItem {
+  align-items: center;
+  border-radius: 6px;
+  color: var(--text-primary);
+  display: flex;
+  font-size: 0.95rem;
+  font-weight: 700;
+  gap: 0.65rem;
+  padding: 0.7rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.downloadMenuItem:hover {
+  background: rgba(2, 132, 199, 0.1);
+  color: var(--accent-blue);
+}
+
+.downloadMenuDisabled {
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.downloadMenuDisabled:hover {
+  background: transparent;
+  color: var(--text-secondary);
 }
 
 .modalBackdrop {
@@ -297,6 +342,59 @@
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.downloadModal {
+  max-width: 460px;
+}
+
+.downloadSubtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0.25rem 0 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.downloadOptions {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.platformLink {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(30, 41, 59, 0.12);
+  border-radius: 8px;
+  color: var(--text-primary);
+  display: flex;
+  gap: 0.85rem;
+  padding: 1rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.platformLink:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+.platformLink span {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.platformLink small {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.platformDisabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.platformDisabled:hover {
+  border-color: rgba(30, 41, 59, 0.12);
+  transform: none;
 }
 
 .card:hover .iconWrapper {
