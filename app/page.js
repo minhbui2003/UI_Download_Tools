@@ -114,7 +114,7 @@ function ToolCard({ tool, onShowDetails }) {
               ) : (
                 <div className={`${styles.downloadMenuItem} ${styles.downloadMenuDisabled}`}>
                   <Icons.Command size={18} />
-                  <span>macOS chưa có</span>
+                  <span>macOS</span>
                 </div>
               )}
             </div>
@@ -247,7 +247,7 @@ export default function Home() {
                     ) : (
                       <div className={`${styles.downloadMenuItem} ${styles.downloadMenuDisabled}`}>
                         <Icons.Command size={18} />
-                        <span>macOS chưa có</span>
+                        <span>macOS</span>
                       </div>
                     )}
                   </div>
