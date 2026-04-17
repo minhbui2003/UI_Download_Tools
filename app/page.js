@@ -11,53 +11,6 @@ const getIcon = (iconName) => {
   return <IconComponent size={24} strokeWidth={1.5} />;
 };
 
-function DownloadOptionsModal({ tool, onClose }) {
-  const hasMacLink = Boolean(tool.macLink);
-
-  return (
-    <div className={styles.modalBackdrop} onClick={onClose}>
-      <div className={`${styles.modal} ${styles.downloadModal}`} role="dialog" aria-modal="true" aria-labelledby="download-title" onClick={(e) => e.stopPropagation()}>
-        <button
-          type="button"
-          className={styles.modalClose}
-          onClick={onClose}
-          aria-label="Đóng lựa chọn tải xuống"
-        >
-          <Icons.X size={18} />
-        </button>
-        <h2 id="download-title" className={styles.modalTitle}>Chọn phiên bản tải xuống</h2>
-        <p className={styles.downloadSubtitle}>{tool.title}</p>
-        <div className={styles.downloadOptions}>
-          <a href={tool.link} target="_blank" rel="noopener noreferrer" className={styles.platformLink}>
-            <Icons.Monitor size={22} />
-            <span>
-              <strong>Windows</strong>
-              <small>Tải bản dành cho Windows</small>
-            </span>
-          </a>
-          {hasMacLink ? (
-            <a href={tool.macLink} target="_blank" rel="noopener noreferrer" className={styles.platformLink}>
-              <Icons.Command size={22} />
-              <span>
-                <strong>macOS</strong>
-                <small>Tải bản dành cho Mac</small>
-              </span>
-            </a>
-          ) : (
-            <div className={`${styles.platformLink} ${styles.platformDisabled}`}>
-              <Icons.Command size={22} />
-              <span>
-                <strong>macOS</strong>
-                <small>Chưa có link tải macOS</small>
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ToolCard({ tool, onShowDetails }) {
   const cardRef = useRef(null);
   const descRef = useRef(null);
@@ -109,7 +62,7 @@ function ToolCard({ tool, onShowDetails }) {
   }, [showDownloadOptions]);
 
   return (
-    <div ref={cardRef} className={styles.card}>
+    <div ref={cardRef} className={`${styles.card} ${showDownloadOptions ? styles.cardMenuOpen : ''}`}>
       <div className={styles.cardHeader}>
         <div className={styles.iconWrapper}>
           {getIcon(tool.iconName)}
@@ -133,37 +86,41 @@ function ToolCard({ tool, onShowDetails }) {
 
       <div className={styles.cardFooter}>
         <span className={styles.cardSize}>{tool.size}</span>
-        <button
-          type="button"
-          className={styles.downloadBtn}
-          onClick={(event) => {
-            event.stopPropagation();
-            setShowDownloadOptions((current) => !current);
-          }}
-          aria-expanded={showDownloadOptions}
-        >
-          <Icons.Download size={16} /> Tải xuống
-        </button>
-      </div>
-      {showDownloadOptions && (
-        <div className={styles.downloadMenu}>
-          <a href={tool.link} target="_blank" rel="noopener noreferrer" className={styles.downloadMenuItem}>
-            <Icons.Monitor size={18} />
-            <span>Windows</span>
-          </a>
-          {tool.macLink ? (
-            <a href={tool.macLink} target="_blank" rel="noopener noreferrer" className={styles.downloadMenuItem}>
-              <Icons.Command size={18} />
-              <span>macOS</span>
-            </a>
-          ) : (
-            <div className={`${styles.downloadMenuItem} ${styles.downloadMenuDisabled}`}>
-              <Icons.Command size={18} />
-              <span>macOS chưa có</span>
+        <div className={styles.downloadContainer}>
+          <button
+            type="button"
+            className={styles.downloadBtn}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              setShowDownloadOptions((current) => !current);
+            }}
+            aria-expanded={showDownloadOptions}
+          >
+            <Icons.Download size={16} /> Tải xuống
+          </button>
+
+          {showDownloadOptions && (
+            <div className={styles.downloadMenu}>
+              <a href={tool.link} target="_blank" rel="noopener noreferrer" className={styles.downloadMenuItem}>
+                <Icons.Monitor size={18} />
+                <span>Windows</span>
+              </a>
+              {tool.macLink ? (
+                <a href={tool.macLink} target="_blank" rel="noopener noreferrer" className={styles.downloadMenuItem}>
+                  <Icons.Command size={18} />
+                  <span>macOS</span>
+                </a>
+              ) : (
+                <div className={`${styles.downloadMenuItem} ${styles.downloadMenuDisabled}`}>
+                  <Icons.Command size={18} />
+                  <span>macOS chưa có</span>
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -172,7 +129,7 @@ export default function Home() {
   const [tools, setTools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTool, setSelectedTool] = useState(null);
-  const [selectedDownloadTool, setSelectedDownloadTool] = useState(null);
+  const [showModalDownloadOptions, setShowModalDownloadOptions] = useState(false);
 
   useEffect(() => {
     fetch('/api/tools')
@@ -234,12 +191,18 @@ export default function Home() {
       )}
 
       {selectedTool && (
-        <div className={styles.modalBackdrop} onClick={() => setSelectedTool(null)}>
+        <div className={styles.modalBackdrop} onClick={() => {
+          setSelectedTool(null);
+          setShowModalDownloadOptions(false);
+        }}>
           <div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="tool-detail-title" onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
               className={styles.modalClose}
-              onClick={() => setSelectedTool(null)}
+              onClick={() => {
+                setSelectedTool(null);
+                setShowModalDownloadOptions(false);
+              }}
               aria-label="Đóng chi tiết"
             >
               <Icons.X size={18} />
@@ -256,26 +219,43 @@ export default function Home() {
             <p className={styles.modalDesc}>{selectedTool.description}</p>
             <div className={styles.modalFooter}>
               <span className={styles.cardSize}>{selectedTool.size}</span>
-              <button
-                type="button"
-                className={styles.downloadBtn}
-                onClick={() => {
-                  setSelectedDownloadTool(selectedTool);
-                  setSelectedTool(null);
-                }}
-              >
-                <Icons.Download size={16} /> Tải xuống
-              </button>
+              <div className={styles.downloadContainer}>
+                <button
+                  type="button"
+                  className={styles.downloadBtn}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    setShowModalDownloadOptions((current) => !current);
+                  }}
+                  aria-expanded={showModalDownloadOptions}
+                >
+                  <Icons.Download size={16} /> Tải xuống
+                </button>
+
+                {showModalDownloadOptions && (
+                  <div className={styles.downloadMenu}>
+                    <a href={selectedTool.link} target="_blank" rel="noopener noreferrer" className={styles.downloadMenuItem}>
+                      <Icons.Monitor size={18} />
+                      <span>Windows</span>
+                    </a>
+                    {selectedTool.macLink ? (
+                      <a href={selectedTool.macLink} target="_blank" rel="noopener noreferrer" className={styles.downloadMenuItem}>
+                        <Icons.Command size={18} />
+                        <span>macOS</span>
+                      </a>
+                    ) : (
+                      <div className={`${styles.downloadMenuItem} ${styles.downloadMenuDisabled}`}>
+                        <Icons.Command size={18} />
+                        <span>macOS chưa có</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      )}
-
-      {selectedDownloadTool && (
-        <DownloadOptionsModal
-          tool={selectedDownloadTool}
-          onClose={() => setSelectedDownloadTool(null)}
-        />
       )}
 
       <footer className={styles.footer}>
