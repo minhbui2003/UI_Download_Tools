@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import UserDropdown from './components/UserDropdown';
 import styles from './page.module.css';
 import * as Icons from 'lucide-react';
 
@@ -156,10 +157,10 @@ export default function Home() {
         <span className={styles.companyName}>POD SOFTWARE</span>
       </div>
 
-      {/* Login Icon in Top Right */}
-      <Link href="/admin/dashboard" className={styles.loginIcon} title="Đăng nhập Admin">
-        <Icons.User size={20} />
-      </Link>
+      {/* User Dropdown in Top Right */}
+      <div className={styles.loginIconWrapper}>
+        <UserDropdown />
+      </div>
 
       <div className={styles.header}>
         <h1 className={styles.title}>

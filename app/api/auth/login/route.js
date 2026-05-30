@@ -1,32 +1,40 @@
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 import { getAuthCookieOptions, isConfigError, signAuthToken } from '@/lib/auth';
-import { getUserByUsername } from '@/lib/users';
 
 export async function POST(req) {
   try {
     const { username, password } = await req.json();
 
     if (!username || !password) {
-      return NextResponse.json({ error: 'Please provide username and password' }, { status: 400 });
+      return NextResponse.json({ error: 'Vui lòng nhập tài khoản và mật khẩu' }, { status: 400 });
     }
 
-    const user = await getUserByUsername(username);
-    if (!user) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-    }
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const employeeUsername = process.env.EMPLOYEE_USERNAME;
+    const employeePassword = process.env.EMPLOYEE_PASSWORD;
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    let role = null;
+    let userId = null;
+
+    // Ưu tiên check admin trước
+    if (username === adminUsername && password === adminPassword) {
+      role = 'admin';
+      userId = 'admin_id';
+    } else if (username === employeeUsername && password === employeePassword) {
+      role = 'employee';
+      userId = 'employee_id';
+    } else {
+      return NextResponse.json({ error: 'Tài khoản hoặc mật khẩu không chính xác' }, { status: 401 });
     }
 
     const token = await signAuthToken({
-      id: user._id.toString(),
-      username: user.username,
+      id: userId,
+      username: username,
+      role: role
     });
 
-    const response = NextResponse.json({ message: 'Login successful' }, { status: 200 });
+    const response = NextResponse.json({ message: 'Đăng nhập thành công', role: role }, { status: 200 });
     response.cookies.set({
       ...getAuthCookieOptions(),
       value: token,

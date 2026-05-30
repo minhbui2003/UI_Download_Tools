@@ -31,6 +31,12 @@
   letter-spacing: 0;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .homeLink {
   align-items: center;
   border: 1px solid rgba(30, 41, 59, 0.4);

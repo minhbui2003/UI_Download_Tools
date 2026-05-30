@@ -1,0 +1,133 @@
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.iconButton {
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  outline: none;
+}
+
+.iconButton:hover {
+  color: var(--accent-blue);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--accent-blue);
+  box-shadow: 0 4px 15px rgba(2, 132, 199, 0.2);
+  transform: translateY(-2px);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px;
+  z-index: 1000;
+  animation: fadeInDown 0.2s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+.avatar {
+  background: rgba(2, 132, 199, 0.1);
+  color: #0284c7;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.userRole {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.05);
+  margin: 8px 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.menuItem:hover {
+  background: #f1f5f9;
+  color: #0284c7;
+}
+
+.logoutBtn {
+  color: #ef4444;
+}
+
+.logoutBtn:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}

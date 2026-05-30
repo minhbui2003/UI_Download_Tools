@@ -1,4 +1,6 @@
 import './globals.css';
+import { cookies } from 'next/headers';
+import { AUTH_COOKIE_NAME } from '@/lib/auth';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 const appBackground = `
@@ -37,6 +39,9 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.has(AUTH_COOKIE_NAME);
+
   return (
     <html lang="vi" style={{ minHeight: '100%', background: appBackground }}>
       <body style={{ minHeight: '100vh', background: appBackground }}>

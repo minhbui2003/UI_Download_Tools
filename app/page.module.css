@@ -15,6 +15,12 @@
   background-attachment: fixed;
 }
 
+.loginIconWrapper {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+
 .loginIcon {
   position: absolute;
   top: 2rem;
@@ -475,7 +481,7 @@
     top: 1.25rem;
   }
 
-  .loginIcon {
+  .loginIconWrapper {
     right: 1rem;
     top: 1.25rem;
   }

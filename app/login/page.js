@@ -24,9 +24,13 @@ export default function Login() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Login failed');
+      if (!res.ok) throw new Error(data.error || 'Đăng nhập thất bại');
 
-      router.push('/admin/dashboard');
+      if (data.role === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/');
+      }
       router.refresh();
     } catch (err) {
       setError(err.message);
@@ -37,7 +41,7 @@ export default function Login() {
 
   return (
     <div className={styles.card}>
-      <h2 className={styles.title}>Đăng nhập Quản trị</h2>
+      <h2 className={styles.title}>Đăng nhập</h2>
       {error && (
         <div className={styles.error}>
           {error}
