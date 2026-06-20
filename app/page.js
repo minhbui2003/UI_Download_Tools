@@ -156,10 +156,19 @@ export default function Home() {
         <span className={styles.companyName}>POD SOFTWARE</span>
       </div>
 
-      {/* Login Icon in Top Right */}
-      <Link href="/admin/dashboard" className={styles.loginIcon} title="Đăng nhập Admin">
-        <Icons.User size={20} />
-      </Link>
+      {/* Logout Icon in Top Right */}
+      <button 
+        onClick={() => {
+          fetch('/api/auth/logout', { method: 'POST' }).then(() => {
+            window.location.href = '/login';
+          });
+        }} 
+        className={styles.loginIcon} 
+        title="Đăng xuất" 
+        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+      >
+        <Icons.LogOut size={20} />
+      </button>
 
       <div className={styles.header}>
         <h1 className={styles.title}>

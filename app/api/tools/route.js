@@ -15,7 +15,10 @@ export async function POST(req) {
   try {
     try {
       const token = req.cookies.get(AUTH_COOKIE_NAME)?.value;
-      await verifyAuthToken(token);
+      const payload = await verifyAuthToken(token);
+      if (payload.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      }
     } catch (err) {
       if (isConfigError(err)) {
         return NextResponse.json({ error: err.message }, { status: 500 });

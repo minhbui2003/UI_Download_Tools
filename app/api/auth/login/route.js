@@ -11,6 +11,24 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Please provide username and password' }, { status: 400 });
     }
 
+    if (
+      process.env.EMPLOYEE_USERNAME && process.env.EMPLOYEE_PASSWORD &&
+      username === process.env.EMPLOYEE_USERNAME &&
+      password === process.env.EMPLOYEE_PASSWORD
+    ) {
+      const token = await signAuthToken({
+        id: 'employee',
+        username: username,
+        role: 'employee',
+      });
+      const response = NextResponse.json({ message: 'Login successful', role: 'employee' }, { status: 200 });
+      response.cookies.set({
+        ...getAuthCookieOptions(),
+        value: token,
+      });
+      return response;
+    }
+
     const user = await getUserByUsername(username);
     if (!user) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
@@ -24,9 +42,10 @@ export async function POST(req) {
     const token = await signAuthToken({
       id: user._id.toString(),
       username: user.username,
+      role: 'admin',
     });
 
-    const response = NextResponse.json({ message: 'Login successful' }, { status: 200 });
+    const response = NextResponse.json({ message: 'Login successful', role: 'admin' }, { status: 200 });
     response.cookies.set({
       ...getAuthCookieOptions(),
       value: token,

@@ -96,6 +96,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 300px));
+  grid-auto-rows: 1fr;
   gap: 2rem;
   justify-content: center;
   width: 100%;
@@ -111,10 +112,11 @@
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   padding: 1rem 1.25rem 1.25rem;
-  display: grid;
-  grid-template-rows: 48px minmax(3.6em, 1fr) auto;
-  row-gap: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
   min-height: 204px;
+  height: 100%;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 1;
@@ -212,7 +214,7 @@
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 700;
-  margin: 0 0 1.1rem;
+  margin: -0.5rem 0 0;
   padding: 0;
 }
 
@@ -225,6 +227,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: auto;
 }
 
 .cardSize {
